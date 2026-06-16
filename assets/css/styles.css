@@ -1,0 +1,349 @@
+/* =========================================================================
+   Halebop — Kometresan (B-version)
+   En rymdfärd genom solsystemet medan du bygger ditt abonnemang.
+   Designspråk: djupt kosmos (lila/svart) + Halebops signaturrosa + stjärnguld.
+   Signatur: kometen som följer med dig från planet till planet.
+   ========================================================================= */
+
+/* ---- Tokens ----------------------------------------------------------- */
+:root {
+  --space-950: #05010d;
+  --space-900: #0b0420;
+  --space-850: #110735;
+  --space-800: #170a3e;
+  --nebula:    #3a1466;
+  --nebula-2:  #6a1d8c;
+
+  --hb-pink:    #ff2d87;   /* Halebops signatur */
+  --hb-pink-hi: #ff6fb0;
+  --hb-glow:    rgba(255, 45, 135, 0.55);
+  --star-gold:  #ffd36e;
+  --cyan:       #5fe3e8;   /* återhållsam dataaccent */
+
+  --ink:    #fdeef6;
+  --muted:  #b6a6d6;
+  --line:   rgba(255, 255, 255, 0.10);
+  --card:   rgba(28, 14, 58, 0.55);
+  --card-hi: rgba(48, 22, 92, 0.72);
+
+  --font-display: "Space Grotesk", "Trebuchet MS", system-ui, sans-serif;
+  --font-body:    "Sora", system-ui, -apple-system, sans-serif;
+
+  --radius:  22px;
+  --radius-s: 14px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --rail-w: 92px;
+}
+
+/* ---- Reset ------------------------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--space-950);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;            /* resan är stegbaserad, inte rullad */
+  min-height: 100vh;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+img { max-width: 100%; display: block; }
+::selection { background: var(--hb-pink); color: #fff; }
+
+/* ---- Kosmisk bakgrund ------------------------------------------------- */
+#starfield {
+  position: fixed; inset: 0; z-index: 0;
+  display: block;
+}
+.cosmos {
+  position: fixed; inset: 0; z-index: -1;
+  background:
+    radial-gradient(120% 80% at 78% -10%, rgba(255,45,135,0.22), transparent 55%),
+    radial-gradient(90% 70% at 12% 20%, rgba(106,29,140,0.35), transparent 60%),
+    radial-gradient(140% 120% at 50% 120%, rgba(95,227,232,0.10), transparent 55%),
+    linear-gradient(160deg, var(--space-900), var(--space-950) 70%);
+}
+.cosmos::after { /* nebulakorn */
+  content: ""; position: absolute; inset: 0; opacity: 0.5; mix-blend-mode: screen;
+  background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 3px 3px;
+}
+
+/* ---- Layoutskal ------------------------------------------------------- */
+.app {
+  position: relative; z-index: 2;
+  height: 100vh; display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+/* ---- Topbar ----------------------------------------------------------- */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px clamp(20px, 4vw, 56px);
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand__comet {
+  width: 30px; height: 30px; position: relative;
+  filter: drop-shadow(0 0 10px var(--hb-glow));
+}
+.brand__name {
+  font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em;
+  font-size: 22px;
+}
+.brand__name b { color: var(--hb-pink); font-weight: 700; }
+.topbar__meta {
+  font-size: 12.5px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted);
+}
+.topbar__meta span { color: var(--star-gold); }
+
+/* ---- Mitten: rail + scen ---------------------------------------------- */
+.stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--rail-w) 1fr;
+  min-height: 0;
+}
+
+/* Orbit-rail (planeter + komet) */
+.rail {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 8px 0;
+}
+.rail__line {
+  position: absolute; top: 40px; bottom: 40px; left: 50%;
+  width: 2px; transform: translateX(-50%);
+  background: linear-gradient(var(--hb-pink), rgba(255,255,255,0.08));
+  opacity: 0.5;
+}
+.rail__planets {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; justify-content: space-between;
+  align-items: center; height: 100%; padding: 24px 0;
+}
+.planet-dot {
+  --d: 16px;
+  width: var(--d); height: var(--d); border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff5, transparent 60%), var(--nebula-2);
+  outline: 2px solid rgba(255,255,255,0.12); outline-offset: 3px;
+  position: relative; transition: transform 0.4s var(--ease), box-shadow 0.4s;
+  display: grid; place-items: center;
+}
+.planet-dot[data-body="sun"]    { background: radial-gradient(circle at 35% 30%, #fff, var(--star-gold) 55%, #ff8a3c); }
+.planet-dot[data-body="mercury"]{ background: radial-gradient(circle at 35% 30%, #fff6, #b8a08a); }
+.planet-dot[data-body="venus"]  { background: radial-gradient(circle at 35% 30%, #fff6, #e7b35a); }
+.planet-dot[data-body="mars"]   { background: radial-gradient(circle at 35% 30%, #fff6, #d65a3a); }
+.planet-dot[data-body="jupiter"]{ background: radial-gradient(circle at 35% 30%, #fff6, #c98a52 60%, #8a5a36); }
+.planet-dot[data-body="saturn"] { background: radial-gradient(circle at 35% 30%, #fff6, #d9c089); }
+.planet-dot.is-done  { box-shadow: 0 0 0 2px var(--hb-pink); }
+.planet-dot.is-active { transform: scale(1.5); box-shadow: 0 0 22px var(--hb-glow), 0 0 0 2px var(--hb-pink-hi); }
+.planet-dot__label {
+  position: absolute; left: calc(100% + 14px); top: 50%; transform: translateY(-50%);
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  white-space: nowrap; color: var(--muted); opacity: 0; transition: opacity 0.3s; pointer-events: none;
+}
+.planet-dot.is-active .planet-dot__label { opacity: 1; color: var(--ink); }
+
+/* Kometen som åker längs rail:en */
+.comet {
+  position: absolute; left: 50%; top: 0;
+  width: 26px; height: 26px; transform: translate(-50%, -50%);
+  z-index: 3; transition: top 0.9s var(--ease);
+  pointer-events: none;
+}
+.comet__head {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff, var(--star-gold) 40%, var(--hb-pink) 80%);
+  box-shadow: 0 0 18px 4px var(--hb-glow), 0 0 40px 8px rgba(255,45,135,0.25);
+}
+.comet__tail {
+  position: absolute; left: 50%; bottom: 100%; transform: translateX(-50%);
+  width: 8px; height: 70px;
+  background: linear-gradient(to top, var(--hb-pink), rgba(255,45,135,0));
+  filter: blur(2px); border-radius: 50%;
+}
+
+/* ---- Scen / steg ------------------------------------------------------ */
+.scene {
+  position: relative; min-height: 0;
+  overflow-y: auto; overflow-x: hidden;
+  padding: clamp(8px, 2vh, 28px) clamp(20px, 4vw, 64px) 28px;
+  scrollbar-width: thin; scrollbar-color: var(--nebula-2) transparent;
+}
+.scene::-webkit-scrollbar { width: 8px; }
+.scene::-webkit-scrollbar-thumb { background: var(--nebula-2); border-radius: 8px; }
+
+.step { display: none; max-width: 1080px; margin: 0 auto; }
+.step.is-active { display: block; animation: warp 0.7s var(--ease) both; }
+@keyframes warp {
+  from { opacity: 0; transform: translateY(26px) scale(0.985); filter: blur(6px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--star-gold); margin: 0 0 14px;
+}
+.eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--star-gold); }
+
+.step h1 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(34px, 6vw, 68px); line-height: 0.98; letter-spacing: -0.03em;
+  margin: 0 0 16px;
+}
+.step h1 em { font-style: normal; color: var(--hb-pink); }
+.step .lead { font-size: clamp(15px, 2.1vw, 19px); color: var(--muted); max-width: 56ch; margin: 0 0 28px; line-height: 1.55; }
+
+/* ---- Hero (start) ----------------------------------------------------- */
+.hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; min-height: 62vh; }
+.hero__art { position: relative; aspect-ratio: 1; max-width: 420px; justify-self: center; }
+.orbit-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.12);
+  animation: spin 26s linear infinite;
+}
+.orbit-ring.r2 { inset: 14%; border-color: rgba(255,45,135,0.28); animation-duration: 18s; animation-direction: reverse; }
+.orbit-ring.r3 { inset: 30%; border-color: rgba(95,227,232,0.22); animation-duration: 12s; }
+.orbit-ring::after {
+  content: ""; position: absolute; top: -6px; left: 50%; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--hb-pink); box-shadow: 0 0 16px var(--hb-glow);
+}
+.orbit-ring.r2::after { background: var(--cyan); box-shadow: 0 0 14px var(--cyan); }
+.orbit-ring.r3::after { background: var(--star-gold); box-shadow: 0 0 14px var(--star-gold); }
+.hero__sun {
+  position: absolute; inset: 38%; border-radius: 50%;
+  background: radial-gradient(circle at 38% 34%, #fff, var(--star-gold) 45%, var(--hb-pink) 110%);
+  box-shadow: 0 0 60px 10px var(--hb-glow);
+  animation: pulse 4s ease-in-out infinite;
+}
+@keyframes spin  { to { transform: rotate(360deg); } }
+@keyframes pulse { 50% { transform: scale(1.06); } }
+
+.hero__stats { display: flex; gap: 26px; margin-top: 26px; flex-wrap: wrap; }
+.hero__stat b { font-family: var(--font-display); font-size: 26px; color: var(--ink); display: block; }
+.hero__stat span { font-size: 12.5px; color: var(--muted); letter-spacing: 0.06em; }
+
+/* ---- Kortgrid --------------------------------------------------------- */
+.grid { display: grid; gap: 16px; }
+.grid--phones  { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.grid--plans   { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.grid--bb      { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+.grid--stream  { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+
+.card {
+  position: relative; text-align: left;
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 22px;
+  transition: transform 0.35s var(--ease), border-color 0.3s, background 0.3s, box-shadow 0.3s;
+  display: flex; flex-direction: column; gap: 10px; width: 100%;
+  backdrop-filter: blur(8px);
+}
+.card:hover { transform: translateY(-6px); border-color: rgba(255,45,135,0.5); background: var(--card-hi); }
+.card.is-selected {
+  border-color: var(--hb-pink);
+  background: var(--card-hi);
+  box-shadow: 0 0 0 1px var(--hb-pink), 0 18px 50px -20px var(--hb-glow);
+}
+.card.is-selected::after {
+  content: "✓"; position: absolute; top: 16px; right: 16px;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--hb-pink); color: #fff; display: grid; place-items: center;
+  font-size: 14px; font-weight: 700; box-shadow: 0 0 16px var(--hb-glow);
+}
+.card__emoji { font-size: 30px; }
+.card__brand { font-size: 11.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.card__title { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+.card__data  { color: var(--cyan); font-size: 14.5px; font-weight: 600; }
+.card__tag   { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+.card__price { margin-top: auto; font-family: var(--font-display); font-size: 20px; }
+.card__price small { font-size: 13px; color: var(--muted); font-family: var(--font-body); font-weight: 400; }
+.card__price.free { color: var(--star-gold); }
+
+.badge {
+  position: absolute; top: -10px; left: 18px;
+  background: linear-gradient(100deg, var(--hb-pink), var(--hb-pink-hi));
+  color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 999px; box-shadow: 0 6px 20px -6px var(--hb-glow);
+}
+
+.perks { list-style: none; padding: 0; margin: 4px 0 0; display: grid; gap: 7px; }
+.perks li { font-size: 13px; color: var(--ink); display: flex; gap: 8px; align-items: flex-start; }
+.perks li::before { content: "✦"; color: var(--hb-pink); flex: none; }
+
+/* ---- Sammanfattning (Saturnus) --------------------------------------- */
+.summary { display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; align-items: start; }
+.receipt {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 24px; backdrop-filter: blur(8px);
+}
+.receipt h3 { font-family: var(--font-display); margin: 0 0 14px; font-size: 18px; letter-spacing: 0.02em; }
+.receipt__row { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--line); font-size: 15px; }
+.receipt__row span:first-child { color: var(--muted); }
+.receipt__row b { font-family: var(--font-display); font-weight: 600; }
+.receipt__row.muted span { color: rgba(182,166,214,0.6); }
+.receipt__total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 18px; }
+.receipt__total b { font-family: var(--font-display); font-size: 38px; color: var(--hb-pink); }
+.receipt__total span { color: var(--muted); font-size: 13px; }
+
+.cta-panel { text-align: left; }
+.cta-panel p { color: var(--muted); line-height: 1.6; }
+
+/* ---- Footer / navigation --------------------------------------------- */
+.footbar {
+  display: grid; grid-template-columns: var(--rail-w) 1fr; align-items: center;
+  border-top: 1px solid var(--line);
+  background: rgba(5, 1, 13, 0.55); backdrop-filter: blur(10px);
+}
+.footbar__inner {
+  grid-column: 2; display: flex; align-items: center; justify-content: space-between;
+  gap: 18px; padding: 16px clamp(20px, 4vw, 64px);
+}
+
+/* Löpande färdplan-summa */
+.tally { display: flex; align-items: baseline; gap: 12px; }
+.tally__label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); }
+.tally__value { font-family: var(--font-display); font-size: 30px; font-weight: 700; }
+.tally__value span { font-size: 14px; color: var(--muted); font-weight: 400; }
+.tally__value.bump { animation: bump 0.45s var(--ease); }
+@keyframes bump { 30% { transform: scale(1.16); color: var(--hb-pink-hi); } }
+
+.nav { display: flex; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 13px 26px; border-radius: 999px; font-weight: 600; font-size: 15px;
+  transition: transform 0.2s var(--ease), box-shadow 0.3s, background 0.3s, opacity 0.2s;
+}
+.btn:active { transform: translateY(1px) scale(0.99); }
+.btn--ghost { color: var(--ink); border: 1px solid var(--line); }
+.btn--ghost:hover { border-color: var(--hb-pink); }
+.btn--primary {
+  background: linear-gradient(100deg, var(--hb-pink), var(--hb-pink-hi));
+  color: #fff; box-shadow: 0 10px 30px -10px var(--hb-glow);
+}
+.btn--primary:hover { box-shadow: 0 14px 40px -10px var(--hb-glow); transform: translateY(-2px); }
+.btn--lg { padding: 16px 34px; font-size: 16.5px; }
+.btn[disabled] { opacity: 0.35; pointer-events: none; }
+
+/* ---- Responsivt ------------------------------------------------------- */
+@media (max-width: 860px) {
+  :root { --rail-w: 56px; }
+  .hero { grid-template-columns: 1fr; min-height: auto; }
+  .hero__art { order: -1; max-width: 260px; }
+  .summary { grid-template-columns: 1fr; }
+  .planet-dot__label { display: none; }
+  .topbar__meta { display: none; }
+  .tally__value { font-size: 24px; }
+  .btn { padding: 12px 20px; }
+}
+@media (max-width: 520px) {
+  .footbar__inner { flex-direction: column; align-items: stretch; gap: 12px; }
+  .nav { justify-content: space-between; }
+}
+
+/* ---- Tillgänglighet --------------------------------------------------- */
+:focus-visible { outline: 3px solid var(--hb-pink-hi); outline-offset: 3px; border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.01ms !important; }
+}
