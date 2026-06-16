@@ -18,13 +18,13 @@ window.HALEBOP_DATA = {
   ],
 
   plans: [
-    { id: "liten",   name: "Liten",   data: "15 GB",            monthly: 249, badge: null,
+    { id: "mini",    name: "Mini",    data: "8 GB",             monthly: 149, badge: null,
       perks: ["Fria samtal & SMS", "5G i Telias nät", "Ingen bindningstid"] },
-    { id: "mellan",  name: "Mellan",  data: "40 GB",            monthly: 299, badge: "Populärast",
+    { id: "lagom",   name: "Lagom",   data: "40 GB",            monthly: 249, badge: "Populärast",
       perks: ["Fria samtal & SMS", "Datarollover", "EU-roaming ingår"] },
-    { id: "stor",    name: "Stor",    data: "100 GB",           monthly: 349, badge: null,
+    { id: "stor",    name: "Stor",    data: "100 GB",           monthly: 329, badge: null,
       perks: ["Fria samtal & SMS", "Dela surf med 3 SIM", "5G+ prioriterad fart"] },
-    { id: "granslos",name: "Gränslös",data: "Obegränsad surf",  monthly: 449, badge: "Bäst värde",
+    { id: "granslos",name: "Gränslös",data: "Obegränsad surf",  monthly: 399, badge: "Bäst värde",
       perks: ["Fria samtal & SMS", "Obegränsad data i full fart", "1 streamingtjänst ingår"] }
   ],
 

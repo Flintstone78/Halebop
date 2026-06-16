@@ -3,20 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Halebop — Din resa, ditt universum</title>
-  <meta name="description" content="Bygg ditt paket steg för steg och få precis det som passar dig. Abonnemang, mobil och streaming — en resa genom ditt universum." />
+  <title>Halebop — Din resa genom universum</title>
+  <meta name="description" content="Dyk djupare och djupare in i ditt universum. Bygg ditt paket steg för steg — abonnemang, mobil och streaming — medan du reser mot stjärnorna." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
-  <div class="blobs" aria-hidden="true">
-    <span class="blob b1"></span><span class="blob b2"></span>
-    <span class="blob b3"></span><span class="blob b4"></span>
-  </div>
+  <canvas id="warp" aria-hidden="true"></canvas>
+  <div class="dust" id="dust" aria-hidden="true"></div>
 
-  <div class="page">
+  <div class="app">
     <!-- Topbar -->
     <header class="nav">
       <a class="logo" href="#">halebop</a>
@@ -27,95 +25,70 @@
       <div class="nav__actions">
         <a class="nav__action" href="#"><svg class="nav__ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><span>Sök</span></a>
         <a class="nav__action" href="#"><svg class="nav__ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg><span>Logga in</span></a>
-        <a class="nav__action cart" href="#" id="cart">
-          <svg class="nav__ico" viewBox="0 0 24 24"><path d="M5 7h14l-1.2 10.5a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8L5 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
-          <span>Kundvagn</span><b class="cart__badge" id="cart-badge">0</b>
-        </a>
+        <a class="nav__action cart" href="#" id="cart"><svg class="nav__ico" viewBox="0 0 24 24"><path d="M5 7h14l-1.2 10.5a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8L5 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span>Kundvagn</span><b class="cart__badge" id="cart-badge">0</b></a>
       </div>
     </header>
 
-    <!-- Hero -->
-    <section class="hero">
-      <div class="hero__intro">
-        <h1>Din resa.<br>Ditt universum.</h1>
-        <p class="hero__lead">Bygg ditt paket steg för steg och få precis det som passar dig.</p>
-        <span class="hero__hand">Vi hänger med.</span>
+    <!-- Stage (perspektiv-djup) -->
+    <div class="stage" id="stage">
+      <div class="intro">
+        <h1 id="intro-title">Första stoppet<br>i ditt universum</h1>
+        <p>Bygg ditt paket steg för steg och få precis det som passar dig.</p>
+        <span class="hand">Vi hänger med.</span>
       </div>
 
-      <!-- Journey-karta (desktop) -->
-      <div class="map" id="map" aria-hidden="true">
-        <svg class="map__path" viewBox="0 0 1000 560" preserveAspectRatio="none">
-          <path d="M20,420 C120,470 150,330 210,345 C300,360 330,200 450,225 C560,248 540,380 610,350 C690,322 670,150 720,130" />
-        </svg>
-        <div class="comet-mascot">
-          <svg viewBox="0 0 140 100">
-            <defs>
-              <linearGradient id="flame" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#ffd23f" stop-opacity="0"/>
-                <stop offset="1" stop-color="#ffd23f"/>
-              </linearGradient>
-            </defs>
-            <path d="M2 64 C36 40 60 52 96 52 L70 64 L96 76 C60 76 36 88 2 64 Z" fill="url(#flame)"/>
-            <circle cx="100" cy="64" r="26" fill="#f08a78"/>
-            <circle cx="100" cy="64" r="26" fill="none" stroke="#d96a57" stroke-width="2"/>
-            <circle cx="92" cy="60" r="3.4" fill="#15241f"/><circle cx="108" cy="60" r="3.4" fill="#15241f"/>
-            <path d="M90 70 Q100 78 110 70" stroke="#15241f" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-            <circle cx="85" cy="68" r="3.2" fill="#f5b1a4"/><circle cx="115" cy="68" r="3.2" fill="#f5b1a4"/>
-          </svg>
-        </div>
-        <!-- noder injiceras av JS -->
-      </div>
+      <!-- Glödande resväg mot kärnan -->
+      <svg class="path" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="pathgrad" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="#ffd23f" stop-opacity="0.2"/>
+            <stop offset="0.5" stop-color="#ffe9ad"/>
+            <stop offset="1" stop-color="#fffbe9"/>
+          </linearGradient>
+        </defs>
+        <path d="M120,560 C260,470 300,430 430,380 C560,330 640,300 760,230 C840,184 880,150 940,120" />
+        <path class="dashed" d="M120,560 C260,470 300,430 430,380 C560,330 640,300 760,230 C840,184 880,150 940,120" />
+      </svg>
 
-      <!-- Mobil-journey (staplad) -->
-      <div class="journey-m" id="journey-m"><!-- injiceras av JS --></div>
+      <!-- Kommande hållplatser -->
+      <div class="waypoints" id="waypoints" aria-hidden="true"></div>
 
-      <!-- Sammanfattning -->
+      <!-- Aktiv station -->
+      <div class="station" id="station"><!-- injiceras av JS --></div>
+
+      <!-- Sammanfattning (HUD) -->
       <aside class="summary" id="summary" aria-live="polite">
-        <svg class="summary__peek" viewBox="0 0 60 46" aria-hidden="true">
-          <path d="M2 28 C18 14 30 20 46 20 L34 28 L46 36 C30 36 18 42 2 28 Z" fill="#ffd23f"/>
-          <circle cx="48" cy="28" r="11" fill="#f08a78"/>
-          <circle cx="45" cy="26" r="1.6" fill="#15241f"/><circle cx="52" cy="26" r="1.6" fill="#15241f"/>
-          <path d="M44 31 Q48 34 53 31" stroke="#15241f" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-        </svg>
-        <h2>Din resa sammanfattad</h2>
-        <div class="summary__list" id="summary-list"></div>
-        <div class="summary__total"><span>Totalt / mån</span><b id="summary-total">0 <small>kr</small></b></div>
-        <button class="btn btn--sun" id="btn-checkout">Fortsätt <span aria-hidden="true">→</span></button>
-        <p class="summary__fine">Alltid fria samtal &amp; SMS inom Sverige.</p>
+        <h2>Din sammanfattning</h2>
+        <div id="summary-list"></div>
+        <div class="summary__total"><span>Total t.o.m.</span><b id="summary-total">0 <small>kr</small></b></div>
+        <button class="btn btn--sun" id="btn-checkout">Fortsätt resan <span aria-hidden="true">→</span></button>
       </aside>
-    </section>
+    </div>
 
-    <!-- Feature-rad -->
-    <section class="features">
-      <div class="feature"><div class="feature__ic tint-green">✌️</div><div><h4>Inget krångel</h4><p>Inga bindningstider. Byt när du vill.</p></div></div>
-      <div class="feature"><div class="feature__ic tint-sun">🙂</div><div><h4>Schyssta priser</h4><p>Bra priser på riktiga månadspaket.</p></div></div>
-      <div class="feature"><div class="feature__ic tint-coral">❤️</div><div><h4>För dig</h4><p>Paket som kan ändras efter dig.</p></div></div>
-      <div class="feature"><div class="feature__ic tint-teal">🎧</div><div><h4>Vi finns här</h4><p>Hjälp när du behöver, på ditt sätt.</p></div></div>
-    </section>
-
-    <!-- eSIM -->
-    <section class="esim">
-      <svg class="esim__phone" viewBox="0 0 120 200" aria-hidden="true">
-        <rect x="14" y="6" width="92" height="188" rx="22" fill="#15241f"/>
-        <rect x="20" y="12" width="80" height="176" rx="17" fill="#eef7f1"/>
-        <text x="60" y="74" text-anchor="middle" font-family="Poppins, sans-serif" font-weight="800" font-size="15" fill="#15241f">halebop</text>
-        <rect x="40" y="96" width="40" height="52" rx="7" fill="#ffd23f"/>
-        <path d="M40 110 h40 M58 96 v52" stroke="#15241f" stroke-width="2"/>
-      </svg>
-      <div class="esim__text">
-        <h3>eSIM. Enkelt, snabbt och smidigt.</h3>
-        <p>Beställ ditt eSIM online och kom igång direkt. Inget fysiskt SIM-kort behövs.</p>
-        <a href="#">Läs mer om eSIM <span aria-hidden="true">→</span></a>
+    <!-- Cockpit-dashboard -->
+    <div class="cockpit">
+      <div class="gauge">
+        <div class="gauge__ring"><span class="gauge__face">🛰️</span></div>
+        <div><div class="gauge__k">Universumstatus</div><div class="gauge__v" id="status-text">Allt ser strålande ut ✨</div></div>
       </div>
-      <svg class="esim__doodle" viewBox="0 0 220 130" width="220" aria-hidden="true">
-        <ellipse cx="92" cy="72" rx="34" ry="34" fill="none" stroke="#15241f" stroke-width="2.2"/>
-        <ellipse cx="92" cy="72" rx="56" ry="18" fill="none" stroke="#15241f" stroke-width="2.2" transform="rotate(-18 92 72)"/>
-        <path d="M120 24 l18 14 M132 20 l8 22" stroke="#15241f" stroke-width="2.2" stroke-linecap="round"/>
-        <rect x="168" y="52" width="30" height="40" rx="6" fill="none" stroke="#15241f" stroke-width="2.2"/>
-        <path d="M168 64 h30 M183 52 v40" stroke="#15241f" stroke-width="2.2"/>
-        <path d="M204 58 l10 -4 M206 72 l11 0 M204 86 l10 4" stroke="#15241f" stroke-width="2.2" stroke-linecap="round"/>
-      </svg>
-    </section>
+
+      <div class="console">
+        <div class="console__top">
+          <span class="console__title">Din resa genom universumet</span>
+          <span class="console__x" aria-hidden="true">✕</span>
+        </div>
+        <div class="steps" id="steps"></div>
+        <button class="console__next" id="console-next">
+          <span id="next-label">Nästa stopp: <b>Välj mobil</b></span>
+          <span class="console__arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
+
+      <div class="gauge gauge--right">
+        <div class="gauge__ring"><span class="gauge__face">🙂</span></div>
+        <div><div class="gauge__k">Halebop-guide</div><div class="gauge__v">Alltid med dig.</div></div>
+      </div>
+    </div>
   </div>
 
   <!-- Modal för val -->
@@ -133,7 +106,7 @@
       <div id="modal-body"></div>
       <div class="modal__foot">
         <span class="hint" id="modal-hint"></span>
-        <button class="btn btn--sun" style="width:auto" data-close id="modal-done">Klart</button>
+        <button class="btn btn--sun" style="width:auto" data-close>Klart</button>
       </div>
     </div>
   </div>
