@@ -309,7 +309,7 @@
     }
     function frame() {
       speed += (idle - speed) * 0.05;               // mjuk återgång till idle
-      ctx.fillStyle = "rgba(10,28,42,0.28)"; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = "rgba(58,112,120,0.24)"; ctx.fillRect(0, 0, w, h);
       for (var i = 0; i < stars.length; i++) {
         var s = stars[i];
         s.pz = s.z; s.z -= speed * dpr * 3.2;
@@ -326,7 +326,7 @@
     }
     resize();
     window.addEventListener("resize", resize);
-    if (!reduce) frame(); else { ctx.fillStyle = "rgba(10,28,42,0.4)"; }
+    if (!reduce) frame(); else { ctx.fillStyle = "rgba(58,112,120,0.3)"; ctx.fillRect(0, 0, w, h); }
     window.__warp = function () { speed = 30; };     // burst
   }
   function warpBurst() { if (window.__warp) window.__warp(); }
