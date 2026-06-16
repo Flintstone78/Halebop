@@ -1,78 +1,49 @@
 /* =========================================================================
-   Halebop — Kometresan (B-version)
-   Produktdata. Allt på ett ställe så att en ny version snabbt kan skjutas ut.
-   Priser i kr/mån om inget annat anges. Detta är en demo/affiliate-prototyp.
+   Halebop — Din resa, ditt universum (B-version)
+   Produktdata. Allt på ett ställe så att en ny variant snabbt kan skjutas ut.
+   Priser i kr/mån om inget annat anges. Demo/affiliate-prototyp.
    ========================================================================= */
 
 window.HALEBOP_DATA = {
-  // Varje "planet" är ett steg i resan.
-  planets: [
-    { id: "start",     name: "Uppskjutning", body: "sol",     hint: "Starta resan" },
-    { id: "phone",     name: "Merkurius",    body: "mercury", hint: "Välj telefon" },
-    { id: "plan",      name: "Venus",        body: "venus",   hint: "Välj abonnemang" },
-    { id: "broadband", name: "Mars",         body: "mars",    hint: "Lägg till bredband" },
-    { id: "streaming", name: "Jupiter",      body: "jupiter", hint: "Lägg till streaming" },
-    { id: "summary",   name: "Saturnus",     body: "saturn",  hint: "Din färdplan" }
-  ],
-
-  phones: [
-    {
-      id: "byo",   name: "Ta med din egen", brand: "Bara SIM",
-      monthly: 0,  upfront: 0, emoji: "📱",
-      tagline: "Behåll luren du har — vi skickar bara ett SIM."
-    },
-    {
-      id: "iphone16", name: "iPhone 16", brand: "Apple",
-      monthly: 279, upfront: 0, emoji: "🤍",
-      tagline: "24 mån delbetalning. Glittrar fint i mörkret."
-    },
-    {
-      id: "s25", name: "Galaxy S25", brand: "Samsung",
-      monthly: 249, upfront: 0, emoji: "💙",
-      tagline: "AI i fickan och en kamera som ser stjärnor."
-    },
-    {
-      id: "pixel9", name: "Pixel 9", brand: "Google",
-      monthly: 209, upfront: 0, emoji: "💜",
-      tagline: "Ren Android. Magisk redigering på köpet."
-    }
+  /* Resans steg — speglar journey-kartan på startsidan. */
+  steps: [
+    { id: "plan",      n: 1, name: "Abonnemang", planet: "green",  icon: "sim",
+      title: "Välj abonnemang", blurb: "Fria samtal, SMS och massor av surf." },
+    { id: "phone",     n: 2, name: "Mobil",      planet: "coral",  icon: "phone",
+      title: "Välj mobil", blurb: "Hitta mobilen som passar dig." },
+    { id: "streaming", n: 3, name: "Streaming",  planet: "teal",   icon: "play",
+      title: "Välj streaming", blurb: "Underhållning som följer med dig." },
+    { id: "summary",   n: 4, name: "Din resa",   planet: "yellow", icon: "star",
+      title: "Din resa", blurb: "Se din kombination och klart!" }
   ],
 
   plans: [
-    {
-      id: "lagom", name: "Lagom", data: "30 GB",
-      monthly: 195, badge: null,
-      perks: ["Fri surf i sociala medier", "5G i hela Telias nät", "Ingen bindningstid"]
-    },
-    {
-      id: "mellan", name: "Mellan", data: "100 GB",
-      monthly: 245, badge: "Populärast",
-      perks: ["Datarollover", "EU-roaming ingår", "Ingen bindningstid"]
-    },
-    {
-      id: "granslost", name: "Gränslöst", data: "Obegränsad surf",
-      monthly: 345, badge: null,
-      perks: ["Obegränsad data i full fart", "Dela surf med 3 extra SIM", "Ingen bindningstid"]
-    },
-    {
-      id: "stjarnklart", name: "Stjärnklart", data: "Obegränsad + streaming",
-      monthly: 469, badge: "Bäst värde",
-      perks: ["Obegränsad surf", "1 streamingtjänst på köpet", "5G+ prioriterad fart"]
-    }
+    { id: "liten",   name: "Liten",   data: "15 GB",            monthly: 249, badge: null,
+      perks: ["Fria samtal & SMS", "5G i Telias nät", "Ingen bindningstid"] },
+    { id: "mellan",  name: "Mellan",  data: "40 GB",            monthly: 299, badge: "Populärast",
+      perks: ["Fria samtal & SMS", "Datarollover", "EU-roaming ingår"] },
+    { id: "stor",    name: "Stor",    data: "100 GB",           monthly: 349, badge: null,
+      perks: ["Fria samtal & SMS", "Dela surf med 3 SIM", "5G+ prioriterad fart"] },
+    { id: "granslos",name: "Gränslös",data: "Obegränsad surf",  monthly: 449, badge: "Bäst värde",
+      perks: ["Fria samtal & SMS", "Obegränsad data i full fart", "1 streamingtjänst ingår"] }
   ],
 
-  broadband: [
-    { id: "bb_none", name: "Inget bredband", speed: "Hoppa över", monthly: 0,   emoji: "🚫" },
-    { id: "bb100",   name: "Lagom hem",       speed: "100 Mbit",  monthly: 299, emoji: "🛰️" },
-    { id: "bb250",   name: "Familjehem",      speed: "250 Mbit",  monthly: 379, emoji: "📡" },
-    { id: "bb1000",  name: "Ljushastighet",   speed: "1000 Mbit", monthly: 449, emoji: "🚀" }
+  phones: [
+    { id: "byo",     name: "Ta med din egen", brand: "Bara SIM", monthly: 0,   color: "green",
+      tagline: "Behåll mobilen du har — vi skickar bara ett SIM." },
+    { id: "s24",     name: "Galaxy S24",      brand: "Samsung",  monthly: 199, color: "teal",
+      tagline: "AI i fickan och en kamera som ser stjärnor." },
+    { id: "iphone16",name: "iPhone 16",       brand: "Apple",    monthly: 279, color: "coral",
+      tagline: "24 mån delbetalning. Glittrar fint i mörkret." },
+    { id: "pixel9",  name: "Pixel 9",         brand: "Google",   monthly: 209, color: "yellow",
+      tagline: "Ren Android. Magisk redigering på köpet." }
   ],
 
   streaming: [
-    { id: "netflix",  name: "Netflix",   tier: "Standard",  monthly: 99,  emoji: "🎬" },
-    { id: "hbo",      name: "HBO Max",   tier: "Standard",  monthly: 109, emoji: "🐉" },
-    { id: "disney",   name: "Disney+",   tier: "Standard",  monthly: 99,  emoji: "✨" },
-    { id: "spotify",  name: "Spotify",   tier: "Premium",   monthly: 119, emoji: "🎧" },
-    { id: "viaplay",  name: "Viaplay",   tier: "Total",     monthly: 169, emoji: "⚽" }
+    { id: "netflix", name: "Netflix",  tier: "Standard", monthly: 99,  color: "coral" },
+    { id: "hbo",     name: "HBO Max",  tier: "Standard", monthly: 109, color: "teal" },
+    { id: "disney",  name: "Disney+",  tier: "Standard", monthly: 99,  color: "green" },
+    { id: "spotify", name: "Spotify",  tier: "Premium",  monthly: 119, color: "yellow" },
+    { id: "viaplay", name: "Viaplay",  tier: "Total",    monthly: 169, color: "coral" }
   ]
 };
