@@ -19,10 +19,22 @@
     streaming: []       // ids
   };
 
+  var PLANET_META = {
+    sun:     "Centrum",
+    mercury: "0,39 AE från solen",
+    venus:   "0,72 AE från solen",
+    mars:    "1,52 AE från solen",
+    jupiter: "5,20 AE från solen",
+    saturn:  "9,58 AE från solen"
+  };
+
   var els = {
     scene: document.getElementById("scene"),
     rail: document.getElementById("rail-planets"),
     comet: document.getElementById("comet"),
+    bigplanet: document.getElementById("bigplanet"),
+    planetStage: document.getElementById("planet-stage"),
+    planetMeta: document.getElementById("planet-meta"),
     tally: document.getElementById("tally"),
     prev: document.getElementById("btn-prev"),
     next: document.getElementById("btn-next")
@@ -231,7 +243,23 @@
     });
 
     updateRail();
+    updatePlanetStage();
     updateNav();
+  }
+
+  function updatePlanetStage() {
+    var planet = D.planets[state.step];
+    var body = bodyFor(planet.body);
+    // Hero-steget har egen sol-art; göm den stora planeten där.
+    var hide = state.step === 0;
+    els.planetStage.classList.toggle("is-hidden", hide);
+    if (hide) return;
+    // tvinga om-animering av planetens entré
+    var fresh = els.bigplanet.cloneNode(false);
+    fresh.setAttribute("data-body", body);
+    els.bigplanet.parentNode.replaceChild(fresh, els.bigplanet);
+    els.bigplanet = fresh;
+    els.planetMeta.innerHTML = '<b>' + planet.name + '</b>' + (PLANET_META[body] || "");
   }
 
   function buildRail() {

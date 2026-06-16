@@ -164,6 +164,67 @@ img { max-width: 100%; display: block; }
   filter: blur(2px); border-radius: 50%;
 }
 
+/* ---- Stor planet i scenen (atmosfär per stopp) ------------------------ */
+.planet-stage {
+  position: absolute; z-index: 1; pointer-events: none;
+  right: clamp(-160px, -4vw, -40px); top: 50%;
+  width: clamp(320px, 42vh, 540px); height: clamp(320px, 42vh, 540px);
+  transform: translateY(-50%);
+  display: grid; place-items: center;
+}
+.planet-stage.is-hidden { opacity: 0; }
+.planet-stage__meta {
+  position: absolute; left: 4%; bottom: 8%;
+  font-family: var(--font-display); font-size: 12px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted); text-align: left;
+  text-shadow: 0 2px 12px #000;
+}
+.planet-stage__meta b { display: block; color: var(--ink); font-size: 15px; letter-spacing: 0.06em; }
+
+.bigplanet {
+  width: 78%; height: 78%; border-radius: 50%;
+  position: relative; isolation: isolate;
+  box-shadow: inset -34px -22px 70px rgba(0,0,0,0.7), 0 0 90px 8px rgba(255,45,135,0.12);
+  animation: planetIn 1s var(--ease) both, drift 14s ease-in-out infinite;
+}
+.bigplanet::before { /* dagsljus-terminator */
+  content: ""; position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(circle at 30% 28%, rgba(255,255,255,0.45), transparent 42%);
+  mix-blend-mode: screen;
+}
+@keyframes planetIn { from { opacity: 0; transform: translateX(40px) scale(0.9); } to { opacity: 1; transform: none; } }
+@keyframes drift { 50% { transform: translateY(-14px); } }
+
+.bigplanet[data-body="mercury"] { background: radial-gradient(circle at 32% 30%, #c9bdae, #8a7a66 55%, #4f463a); }
+.bigplanet[data-body="venus"]   { background: radial-gradient(circle at 32% 30%, #ffe9b0, #e8b15a 50%, #9c6b2a); }
+.bigplanet[data-body="mars"]    { background: radial-gradient(circle at 32% 30%, #ff9b6b, #d2542f 52%, #7c2a16); }
+.bigplanet[data-body="jupiter"] {
+  background:
+    repeating-linear-gradient(7deg,
+      rgba(0,0,0,0.10) 0 7px, rgba(255,255,255,0.06) 7px 14px),
+    radial-gradient(circle at 32% 30%, #f3d6a8, #c98a52 55%, #7a4d2c);
+}
+.bigplanet[data-body="jupiter"]::after { /* stora röda fläcken */
+  content: ""; position: absolute; left: 30%; top: 56%; width: 22%; height: 13%;
+  border-radius: 50%; background: radial-gradient(circle, #d65a3a, #8a2f1c);
+  box-shadow: 0 0 14px rgba(0,0,0,0.4); z-index: 2;
+}
+.bigplanet[data-body="saturn"]  { background: radial-gradient(circle at 32% 30%, #f6e6bd, #d9c089 52%, #9c8347); overflow: visible; }
+.bigplanet[data-body="saturn"]::after { /* ringar */
+  content: ""; position: absolute; left: 50%; top: 50%; width: 188%; height: 56%;
+  transform: translate(-50%, -50%) rotate(-18deg);
+  border-radius: 50%;
+  border: 12px solid rgba(255,209,110,0.55);
+  box-shadow: 0 0 0 6px rgba(255,255,255,0.10), inset 0 0 0 10px rgba(255,255,255,0.10);
+  background: transparent; z-index: -1;
+}
+.bigplanet[data-body="sun"] {
+  background: radial-gradient(circle at 40% 36%, #fff, var(--star-gold) 40%, var(--hb-pink) 115%);
+  box-shadow: 0 0 110px 22px var(--hb-glow); animation: planetIn 1s var(--ease) both, pulse 4s ease-in-out infinite;
+}
+
+@media (max-width: 1180px) { .planet-stage { display: none; } }
+
 /* ---- Scen / steg ------------------------------------------------------ */
 .scene {
   position: relative; min-height: 0;
